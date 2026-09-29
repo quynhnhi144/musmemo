@@ -1,0 +1,47 @@
+name: nightly-schedule
+on:
+  schedule:
+    - cron: "0 14 * * *"        # 21:00 giờ VN — chọn bài và tạo event cho 06:00 sáng mai
+  workflow_dispatch:
+
+# Cần để commit lại data/musmemo.db sau khi chạy.
+permissions:
+  contents: write
+
+concurrency:
+  group: musmemo-state   # ba job cùng ghi một file DB — không cho chạy chồng
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install -e ".[io]"
+      - name: publish
+        env:
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+          MUSMEMO_PLAYLIST_ID: ${{ secrets.MUSMEMO_PLAYLIST_ID }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+          GOOGLE_REFRESH_TOKEN: ${{ secrets.GOOGLE_REFRESH_TOKEN }}
+          GOOGLE_CALENDAR_ID: ${{ secrets.GOOGLE_CALENDAR_ID }}
+          MUSMEMO_EMAIL: ${{ secrets.MUSMEMO_EMAIL }}
+          MUSMEMO_GIO_TAP: ${{ vars.MUSMEMO_GIO_TAP }}
+          MUSMEMO_TRAN_TA_KG: ${{ vars.MUSMEMO_TRAN_TA_KG }}
+        run: python -m musmemo.publish
+      - name: Lưu lại trạng thái
+        run: |
+          if [ -n "$(git status --porcelain data/)" ]; then
+            git config user.name  "musmemo-bot"
+            git config user.email "musmemo-bot@users.noreply.github.com"
+            git add data/
+            git commit -m "chore(state): publish $(date -u +%F)"
+            git pull --rebase --autostash origin $(git rev-parse --abbrev-ref HEAD)
+            git push
+          else
+            echo "không có thay đổi trạng thái"
+          fi

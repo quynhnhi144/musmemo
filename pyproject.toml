@@ -1,0 +1,24 @@
+[project]
+name = "musmemo"
+version = "0.3.0"
+description = "Mỗi tối chọn hộ buổi tập sáng mai, đẩy vào Google Calendar kèm mức tạ."
+requires-python = ">=3.9"
+
+# Lõi thuật toán (§5, §6) KHÔNG có phụ thuộc ngoài — chạy được bằng python hệ thống.
+# Các gói dưới đây chỉ cần cho những script có gọi mạng.
+dependencies = []
+
+[project.optional-dependencies]
+io = [
+  "google-api-python-client>=2.120",
+  "google-auth>=2.29",
+  "anthropic>=0.40",
+  "pydantic>=2.0",
+]
+# Chỉ cần cho `python -m musmemo.get_token`, chạy tay một lần trên máy local.
+# CI và workflow không cài extra này.
+auth = ["google-auth-oauthlib>=1.2"]
+dev = ["pytest>=8.0"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
