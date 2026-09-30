@@ -9,11 +9,12 @@ của bạn, đẩy vào Google Calendar kèm mức tạ cụ thể, rồi học
 
 | | |
 |---|---|
-| [CLAUDE.md](CLAUDE.md) | **Bắt đầu từ đây.** Bộ nhớ dự án: trạng thái, lệnh, bất biến, cạm bẫy |
+| [Bản đồ MusMemo](https://claude.ai/artifact/BaqDfjreKi4sJYDxa3kVFo?sk=yr0QWUuVK_veXnIYSV7qPg) | **Mới vào thì xem cái này trước.** Hai sơ đồ: một vòng 24 giờ, và luồng Google OAuth |
+| [CLAUDE.md](CLAUDE.md) | **Sắp sửa code thì đọc cái này.** Bộ nhớ dự án: trạng thái, lệnh, bất biến, cạm bẫy |
 | [docs/spec.md](docs/spec.md) | Đặc tả đầy đủ. Mọi `§N` trong code trỏ về đây |
 | [docs/decisions.md](docs/decisions.md) | Các quyết định đã chốt và **lý do** |
 
-Bản spec dạng trang web (cùng nội dung, cần đăng nhập):
+Bản spec dạng trang web (cùng nội dung) — chưa chia sẻ, chỉ chủ tài khoản mở được:
 https://claude.ai/artifact/Du8y4sRy5o1aHGRa3yS9TS
 
 ## Vì sao chạy trên GitHub Actions

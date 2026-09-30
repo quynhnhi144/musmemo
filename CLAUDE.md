@@ -17,9 +17,10 @@ Mọi đánh đổi thiết kế đều nghiêng về phía đó.
 
 | Ở đâu | Cái gì |
 |---|---|
+| [Bản đồ MusMemo](https://claude.ai/artifact/BaqDfjreKi4sJYDxa3kVFo?sk=yr0QWUuVK_veXnIYSV7qPg) | **Hiểu hệ thống trong 2 phút.** Hai sơ đồ vẽ sẵn: vòng 24 giờ người ↔ hệ thống, và luồng Google OAuth. Link công khai, ai cũng mở được |
 | [docs/spec.md](docs/spec.md) | Đặc tả đầy đủ. Mọi `§N` trong code và commit trỏ về đây |
 | [docs/decisions.md](docs/decisions.md) | Các quyết định đã chốt và **lý do**. Đọc trước khi định làm khác đi |
-| https://claude.ai/artifact/Du8y4sRy5o1aHGRa3yS9TS | Bản spec dạng trang web (cùng nội dung, cần đăng nhập) |
+| https://claude.ai/artifact/Du8y4sRy5o1aHGRa3yS9TS | Bản spec dạng trang web (cùng nội dung). **Chưa chia sẻ** — chỉ chủ tài khoản mở được |
 
 ## Người dùng
 

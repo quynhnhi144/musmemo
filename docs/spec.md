@@ -1,7 +1,8 @@
 # MusMemo — đặc tả
 
 Bản 0.3 · 25/09/2026 · một người dùng
-Bản trang web (cùng nội dung): https://claude.ai/artifact/Du8y4sRy5o1aHGRa3yS9TS
+Sơ đồ toàn cảnh, dễ vào nhất cho người mới: https://claude.ai/artifact/BaqDfjreKi4sJYDxa3kVFo?sk=yr0QWUuVK_veXnIYSV7qPg
+Bản trang web của chính spec này: https://claude.ai/artifact/Du8y4sRy5o1aHGRa3yS9TS
 
 Mọi mục đều đánh số để trích dẫn được trong code, commit và thảo luận.
 Lý do đằng sau các lựa chọn nằm ở [decisions.md](decisions.md).
