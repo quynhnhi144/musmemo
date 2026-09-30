@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MusMemo — Privacy Policy</title>
+<style>
+  :root { --fg:#1a1a1a; --muted:#666; --bg:#fff; --line:#e5e5e5; }
+  @media (prefers-color-scheme: dark) {
+    :root { --fg:#e8e8e8; --muted:#9a9a9a; --bg:#151515; --line:#2e2e2e; }
+  }
+  body { background:var(--bg); color:var(--fg); margin:0;
+         font:16px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  main { max-width:34rem; margin:0 auto; padding:4rem 16px; }
+  h1 { font-size:1.5rem; margin:0 0 .25rem; }
+  h2 { font-size:1.05rem; margin:2rem 0 .5rem; }
+  p.sub { color:var(--muted); margin:0 0 2rem; }
+  ul { padding-left:1.1rem; }
+  a { color:inherit; }
+  footer { border-top:1px solid var(--line); margin-top:2.5rem; padding-top:1rem;
+           color:var(--muted); font-size:.9rem; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Privacy Policy</h1>
+  <p class="sub">MusMemo · last updated 26 September 2026</p>
+
+  <p>MusMemo is a personal project with a single user, its author. There are no
+  other users, no accounts and no sign-up. This policy describes what the
+  software does with that one person's data.</p>
+
+  <h2>What it accesses</h2>
+  <ul>
+    <li><b>Google Calendar</b> (<code>calendar.events</code>) — creates one event
+      each morning and reads that event back to see whether the workout happened.
+      It does not read unrelated events.</li>
+    <li><b>Gmail</b> (<code>gmail.send</code>) — sends a weekly summary to the
+      owner's own address. It never reads mail.</li>
+    <li><b>YouTube Data API</b> — reads public metadata (title, channel, duration)
+      for videos in the owner's playlist. No video is ever downloaded.</li>
+  </ul>
+
+  <h2>What it stores, and where</h2>
+  <p>A single SQLite file in a private GitHub repository: workout history,
+  weights lifted, and the tags attached to each playlist video. Nothing else.</p>
+
+  <h2>What it shares</h2>
+  <p>Nothing with anybody. Video titles and channel names are sent to the
+  Anthropic API to be classified by muscle group and intensity; no personal or
+  health data is included in those requests. There is no analytics, no
+  advertising, and no third party with access to the data.</p>
+
+  <h2>Google user data</h2>
+  <p>MusMemo's use of information received from Google APIs adheres to the
+  <a href="https://developers.google.com/terms/api-services-user-data-policy">Google
+  API Services User Data Policy</a>, including the Limited Use requirements.
+  Google user data is never used for advertising, never sold, and never
+  transferred to anyone.</p>
+
+  <h2>Retention and deletion</h2>
+  <p>Data lives until the owner deletes it, by deleting the repository. Access can
+  be withdrawn at any time at
+  <a href="https://myaccount.google.com/permissions">myaccount.google.com/permissions</a>,
+  which immediately stops all access.</p>
+
+  <footer>Questions: <a href="mailto:ltqnhi97+musmemo@gmail.com">ltqnhi97+musmemo@gmail.com</a>
+  · <a href="index.html">Home</a></footer>
+</main>
+</body>
+</html>
