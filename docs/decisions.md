@@ -199,4 +199,10 @@ nếu thiếu Domain-Wide Delegation, mà mời khách chính là cơ chế RSVP
 [QĐ-16](#qđ-16). Chọn nó là đổi một chạm mỗi sáng lấy bốn chạm. Giữ lại làm
 phương án dự phòng nếu RSVP hoá ra không khả thi.
 
+**Publish xong sẽ thấy cảnh báo "Your app requires verification" — kệ nó.**
+Publishing status và verification là hai thứ khác nhau: cái đầu quyết định tuổi
+thọ refresh token (đã xong), cái sau chỉ quyết định người lạ có thấy màn hình
+"Google hasn't verified this app" hay không. Hệ này một người dùng nên **không
+nộp verification** — quy trình đó mất vài tuần và đổi lại không được gì.
+
 *Đã loại:* mua domain riêng (~10 USD/năm) — không cần nữa, vì `github.io` chạy được.
