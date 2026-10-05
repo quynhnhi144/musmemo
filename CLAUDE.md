@@ -149,6 +149,11 @@ sang public — ba commit tiếng Việt ban đầu không còn trên remote.
   cố ý của Google với app External + Testing, không phải lỗi. Phải bấm
   **Publish app** cho sang "In production" thì token mới sống lâu. Bỏ qua bước
   này thì GitHub Actions chạy ngon đúng một tuần rồi hỏng lặng lẽ.
+- **`pip install -e .` hỏng với pip đời cũ.** `.venv` dựng bằng python hệ thống
+  của macOS mang theo pip 21.2.4 (2021), báo *"setup.py not found ... editable
+  mode currently requires a setuptools-based build"*. Hai việc phải làm:
+  `pip install -U pip setuptools wheel`, và `pyproject.toml` phải khai
+  `[build-system]` tường minh thay vì để pip tự đoán.
 - **Google Console từ chối email có dấu `+`.** Ô Developer contact information
   không nhận bí danh kiểu `ten+tag@gmail.com`, và báo lỗi chung chung "An error
   occurred when saving the branding information" chứ không nói lý do. Mất nửa

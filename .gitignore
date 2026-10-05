@@ -10,3 +10,8 @@ data/*.db-shm
 
 # Hồ sơ cá nhân — repo là public, giữ ở máy
 PROFILE.local.md
+
+# File OAuth client tải từ Google Console — chứa cả client secret.
+# Không bao giờ commit. Chỉ cần copy hai giá trị trong đó vào .env rồi xoá file đi.
+client_secret_*.json
+**/client_secret_*.json

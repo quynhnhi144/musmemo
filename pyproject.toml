@@ -1,3 +1,8 @@
+# Thiếu mục này thì `pip install -e .` rơi về cơ chế cũ và đòi setup.py — xem Cạm bẫy.
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "musmemo"
 version = "0.3.0"
@@ -7,6 +12,9 @@ requires-python = ">=3.9"
 # Lõi thuật toán (§5, §6) KHÔNG có phụ thuộc ngoài — chạy được bằng python hệ thống.
 # Các gói dưới đây chỉ cần cho những script có gọi mạng.
 dependencies = []
+
+[tool.setuptools]
+packages = ["musmemo"]
 
 [project.optional-dependencies]
 io = [
