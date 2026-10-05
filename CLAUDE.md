@@ -149,6 +149,10 @@ sang public — ba commit tiếng Việt ban đầu không còn trên remote.
   cố ý của Google với app External + Testing, không phải lỗi. Phải bấm
   **Publish app** cho sang "In production" thì token mới sống lâu. Bỏ qua bước
   này thì GitHub Actions chạy ngon đúng một tuần rồi hỏng lặng lẽ.
+- **Google Console từ chối email có dấu `+`.** Ô Developer contact information
+  không nhận bí danh kiểu `ten+tag@gmail.com`, và báo lỗi chung chung "An error
+  occurred when saving the branding information" chứ không nói lý do. Mất nửa
+  ngày mới tìm ra. Bí danh cộng vẫn dùng được ở nơi khác, chỉ không dùng ở đây.
 - **Cron của GitHub tính theo UTC** và trễ được 10–30 phút. Không sao vì job
   21:00 tạo event cho 06:00 hôm sau.
 

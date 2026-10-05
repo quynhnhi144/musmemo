@@ -170,3 +170,33 @@ có phân biệt "event creator" với "calendar event organizer", nên hướng
 Nếu cả hai đều không được thì quay lại phương án đổi màu.
 
 *Kéo theo:* `publish.py` phải thêm `attendees` vào event — hiện chưa có.
+
+## QĐ-17 · OAuth đi đường External + Publish to production
+**2026-10-06**
+
+Tài khoản chạy dự án là Gmail cá nhân, không phải Google Workspace, nên User type
+**buộc phải là External** — không có lựa chọn Internal. Mà External để ở chế độ
+`Testing` thì Google cấp refresh token **chết sau 7 ngày**, tức là hệ thống chạy
+đúng một tuần rồi hỏng lặng lẽ. Nên bắt buộc phải **Publish app** sang
+`In production`.
+
+Production lại đòi khai home page và privacy policy trên một Authorized domain.
+Giải pháp: ba trang HTML tĩnh nằm ở nhánh `gh-pages` của chính repo này, phục vụ
+qua GitHub Pages tại `quynhnhi144.github.io/musmemo/`. Repo đã public nên Pages
+miễn phí và không cần repo thứ hai.
+
+**Hai thứ đã kiểm chứng bằng thực tế, không phải suy đoán:**
+
+- `quynhnhi144.github.io` **được chấp nhận** làm Authorized domain. Không cần
+  xác minh Search Console ở bước lưu Branding. (Trước đó lo rằng Google chỉ nhận
+  top private domain và sẽ đòi `github.io` trần — lo thừa.)
+- GitHub **tự bật Pages** khi thấy nhánh tên `gh-pages`. Nút Save ở trang cài đặt
+  Pages xám là vì không có gì để lưu, không phải vì hỏng.
+
+*Đã loại:* **service account** — không cần consent screen, không privacy policy,
+không bẫy 7 ngày, cấu hình 10 phút. Nhưng service account **không mời được khách**
+nếu thiếu Domain-Wide Delegation, mà mời khách chính là cơ chế RSVP của
+[QĐ-16](#qđ-16). Chọn nó là đổi một chạm mỗi sáng lấy bốn chạm. Giữ lại làm
+phương án dự phòng nếu RSVP hoá ra không khả thi.
+
+*Đã loại:* mua domain riêng (~10 USD/năm) — không cần nữa, vì `github.io` chạy được.
