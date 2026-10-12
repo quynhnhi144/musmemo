@@ -114,12 +114,22 @@ Bảng `video_exercises` (§6, v1.1) chưa có dữ liệu, nên chưa biết vi
 động tác gì. Tạm map: thân dưới → squat/hip thrust/RDL, thân trên → đẩy vai/chèo.
 Đủ dùng và sẽ chính xác hơn khi làm v1.1 (nguồn: chapters trong mô tả video).
 
-## QĐ-13 · Model mặc định `claude-opus-5`, không tự hạ vì tiền
+## QĐ-13 · Model mặc định dòng Opus, không tự hạ vì tiền
 **2026-09-25**
 
 Gắn tag video là việc phân loại đơn giản, Haiku thừa sức. Nhưng hạ model là quyết
 định của người dùng, không phải của người viết code. Để sẵn biến `ANTHROPIC_MODEL`
 trong `.env.example` kèm gợi ý.
+
+**Cập nhật 12/10/2026 — chi phí tra thật, không còn là vấn đề.** Mỗi video tốn
+khoảng 800 token vào và 80 token ra. Cả mẻ ~70 video: `claude-opus-5-5` ≈ 34 cent,
+`claude-haiku-5-5` dưới 1 cent. Thứ thực sự phải trả là mức nạp tối thiểu 5 USD
+của Anthropic, không phải tiền dùng.
+
+Mặc định nâng từ `claude-opus-5` lên `claude-opus-5-5` — cùng dòng Opus, bản hiện
+hành, lại rẻ hơn ($4/$20 so với $5/$25 mỗi triệu token). Đây không phải hạ model.
+Gợi ý trong `.env.example` cũng sửa từ `claude-haiku-4-5` sang `claude-haiku-5-5`:
+bản mới hơn và rẻ hơn khoảng 10 lần.
 
 ## QĐ-14 · Tên: repo `musmemo`
 **2026-09-25**

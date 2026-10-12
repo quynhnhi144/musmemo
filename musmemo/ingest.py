@@ -181,7 +181,7 @@ def gan_tag(video: Dict) -> Dict:
     )
     client = anthropic.Anthropic()
     kq = client.messages.parse(
-        model=config.lay("ANTHROPIC_MODEL", "claude-opus-5"),
+        model=config.lay("ANTHROPIC_MODEL", "claude-opus-5-5"),
         max_tokens=16000,
         system=HUONG_DAN,
         messages=[{"role": "user", "content": noi_dung}],
