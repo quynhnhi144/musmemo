@@ -199,11 +199,19 @@ def _day_len_calendar(kh: KeHoach, hs: HoSo, mo_ta: str, event_cu: Optional[str]
         "reminders": {"useDefault": False,
                       "overrides": [{"method": "popup", "minutes": 0}]},
     }
+    # §7 — mời chính người dùng làm khách để Calendar hiện ba nút RSVP.
+    # Đó là toàn bộ giao diện phản hồi của hệ thống; không có khách thì
+    # collect.py không có gì để đọc. Xem QĐ-16.
+    email = config.lay("MUSMEMO_EMAIL")
+    if email:
+        body["attendees"] = [{"email": email}]
+        body["guestsCanModify"] = True
     cal = config.lay("GOOGLE_CALENDAR_ID", "primary")
     if event_cu:
-        return svc.events().update(calendarId=cal, eventId=event_cu,
-                                   body=body).execute()["id"]
-    return svc.events().insert(calendarId=cal, body=body).execute()["id"]
+        return svc.events().update(calendarId=cal, eventId=event_cu, body=body,
+                                   sendUpdates="all").execute()["id"]
+    return svc.events().insert(calendarId=cal, body=body,
+                           sendUpdates="all").execute()["id"]
 
 
 # --- Điểm vào ---------------------------------------------------------------

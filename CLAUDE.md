@@ -46,22 +46,23 @@ Không có file? Hỏi người dùng rồi dựng lại theo `PROFILE.example.m
 ✅ config.py       đọc .env / Secrets, thiếu thì bỏ qua êm
 ✅ ingest.py       playlist → YouTube API → Claude gắn tag → DB
 ✅ publish.py      chọn bài + kê tạ + tạo event Calendar; có --dry-run
-⬜ collect.py      đọc lại event hôm qua, suy ra done/skipped/swapped
+✅ collect.py      đọc RSVP của event, suy ra done/skipped/swapped
 ⬜ digest.py       email tổng kết chủ nhật
 ⬜ health.py       ping lại video chết
 ✅ get_token.py    lấy Google refresh token (chạy tay một lần, cần extra [auth])
 ```
 
-34 test, chạy offline trong ~0.03s. **Chưa có secrets nào được cấu hình** nên ba
+47 test, chạy offline trong ~0.03s. **Chưa có secrets nào được cấu hình** nên ba
 workflow theo lịch hiện chỉ in "chưa cấu hình" rồi thoát 0.
 
 ## Lệnh
 
 ```bash
-./.venv/bin/python -m pytest -q                  # 34 test, không cần mạng
+./.venv/bin/python -m pytest -q                  # 47 test, không cần mạng
 ./.venv/bin/python -m musmemo.get_token          # OAuth một lần; --ghi-env để ghi thẳng .env
 ./.venv/bin/python -m musmemo.db                 # tạo/nâng cấp data/musmemo.db
 ./.venv/bin/python -m musmemo.publish --dry-run  # in event ra, không gọi mạng
+./.venv/bin/python -m musmemo.collect --dry-run  # xem sẽ chốt buổi nào
 ./.venv/bin/python -m musmemo.ingest             # cần YOUTUBE_API_KEY + ANTHROPIC_API_KEY
 ./.venv/bin/python -m musmemo.ingest --retag     # gắn tag lại toàn bộ
 ```
@@ -167,8 +168,7 @@ sang public — ba commit tiếng Việt ban đầu không còn trên remote.
 Câu 02 (điểm xuất phát) quyết định mốc thời gian mục tiêu có thực tế hay không.
 Câu trả lời ghi vào `PROFILE.local.md`, không ghi vào repo.
 
-Việc kỹ thuật tiếp theo, theo thứ tự: `collect.py` → `digest.py` → `health.py`.
-**`collect.py` đang chờ một phép thử:** Calendar có hiện nút RSVP cho event do
-chính mình tạo không — xem [QĐ-16](docs/decisions.md). Cần chạy `get_token.py`
-với OAuth thật rồi tạo một event thử mới biết. Và người dùng cần dựng playlist ~40 video —
-đây là rủi ro số một của cả dự án, xem §10.
+Việc kỹ thuật tiếp theo, theo thứ tự: `digest.py` → `health.py`.
+**RSVP đã chứng minh chạy được** (QĐ-16) và `collect.py` đã xong — vòng phản hồi
+của §0 khép kín. Thứ còn thiếu để hệ thống chạy thật là **playlist ~40 video**,
+rủi ro số một của cả dự án, xem §10. Sau đó mới tới việc đưa secrets lên GitHub.

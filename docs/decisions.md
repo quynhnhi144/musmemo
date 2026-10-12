@@ -159,17 +159,16 @@ là một trong hai mũi tên đứt nét làm nên toàn bộ trí thông minh 
 Đổi màu — đọc `colorId` thì chắc chắn được, nhưng bắt người dùng nhớ quy ước màu
 lúc 6 giờ sáng.
 
-**Chưa kiểm chứng được:** Google Calendar có hiện nút RSVP cho event do chính
-người dùng tạo hay không. Tài liệu Calendar API không nói, và diễn đàn Google
-cũng không có câu trả lời dứt khoát. Người tạo event thường được tự động đặt
-`responseStatus: accepted` và không thấy nút "Going?".
+**✅ Đã kiểm chứng bằng thực tế — 12/10/2026.** Tạo một event thật có
+`attendees` là chính người dùng, mở trên điện thoại: Calendar **có hiện đủ ba nút**
+Có / Không / Có thể. Bấm "Có thể" thì API đọc về `responseStatus: tentative`.
 
-Phải thử thật trước khi viết `collect.py`. Nếu không hiện nút, lối thoát đã biết:
-tạo event trên **một calendar phụ** rồi mời email chính làm khách — tài liệu Google
-có phân biệt "event creator" với "calendar event organizer", nên hướng này có cơ sở.
-Nếu cả hai đều không được thì quay lại phương án đổi màu.
+Quan trọng hơn: Google **không** tự đặt người tạo event thành `accepted` — giá trị
+ban đầu là `needsAction`. Đây chính là điều từng lo nhất, và nó đã không xảy ra.
+Không cần tới phương án calendar phụ.
 
-*Kéo theo:* `publish.py` phải thêm `attendees` vào event — hiện chưa có.
+*Kéo theo, đã làm:* `publish.py` thêm `attendees` + `sendUpdates="all"` vào event.
+Không có khách thì Calendar không hiện nút RSVP, và `collect.py` không có gì để đọc.
 
 ## QĐ-17 · OAuth đi đường External + Publish to production
 **2026-10-06**
@@ -206,3 +205,44 @@ thọ refresh token (đã xong), cái sau chỉ quyết định người lạ c�
 nộp verification** — quy trình đó mất vài tuần và đổi lại không được gì.
 
 *Đã loại:* mua domain riêng (~10 USD/năm) — không cần nữa, vì `github.io` chạy được.
+
+## QĐ-18 · Không bấm gì không phải là bỏ tập
+**2026-10-12**
+
+RSVP có bốn giá trị, không phải ba: ngoài `accepted`/`declined`/`tentative` còn
+`needsAction` — người dùng chưa đụng vào. Phải quyết định `needsAction` nghĩa là gì.
+
+Chốt: **`swapped` kèm `ly_do_doi = 'khong_tra_loi'`**.
+
+Vì sao không phải `skipped`: `skipped` làm **đứt streak** và **kích hoạt NT-2**
+tối hôm đó. Phạt người dùng vì quên bấm một cái nút là cách nhanh nhất để họ bỏ
+luôn cả hệ thống — đúng thứ mà toàn bộ dự án này sinh ra để chống.
+
+Vì sao không phải `done`: `done` sẽ ghi `lifts` và đẩy tải lên theo §6, trong khi
+ta không hề biết buổi đó có diễn ra không. Tăng tải dựa trên phỏng đoán là cách
+dẫn tới chấn thương.
+
+`swapped` đúng nghĩa cho cả hai phía: tính là có mặt nên streak giữ nguyên và NT-2
+không nổ, nhưng **không ghi dòng `lifts` nào** nên tải đứng yên — xem Bất biến #3.
+Cột `ly_do_doi` giữ lại phân biệt giữa "đổi bài thật" và "im lặng" để sau này còn
+phân tích được.
+
+*Ngoại lệ:* **xoá hẳn event** khỏi lịch thì tính là `skipped`. Xoá là hành động
+chủ động, rõ ràng hơn cả việc bấm "Không".
+
+## QĐ-19 · Buổi `done` ghi đúng mức tạ đã kê
+**2026-10-12**
+
+§11 câu 04 (form nhập tạ đặt ở đâu) vẫn chưa chốt, nên chưa có đường nào để người
+dùng nhập số ký thật. Nhưng nếu `collect.py` không ghi `lifts` thì bảng đó rỗng
+vĩnh viễn, `de_xuat()` luôn trả 0 kg, và **toàn bộ §6 nằm chết** — hệ thống không
+bao giờ tăng tải.
+
+Chốt: buổi `done` thì ghi lại **đúng mức đã kê trong event**. Người dùng mở lịch
+thấy "Hip thrust 20 kg", tập, rồi bấm "Có" — coi như đã nâng 20 kg.
+
+Khớp với NT-1: mặc định là hành động, không phải khai báo. Và sai số tự chữa —
+kê quá nặng thì buổi sau người dùng báo `qua_nang`, §6 giữ nguyên mức.
+
+*Thay thế khi §11 câu 04 có lời giải:* form ngắn hoặc ô ghi chú kèm RSVP
+(`attendees[].comment` là trường ghi được) sẽ đè lên giá trị mặc định này.
