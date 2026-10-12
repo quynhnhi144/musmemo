@@ -246,3 +246,31 @@ kê quá nặng thì buổi sau người dùng báo `qua_nang`, §6 giữ nguyê
 
 *Thay thế khi §11 câu 04 có lời giải:* form ngắn hoặc ô ghi chú kèm RSVP
 (`attendees[].comment` là trường ghi được) sẽ đè lên giá trị mặc định này.
+
+## QĐ-20 · Kéo video thẳng từ kênh, bỏ bước dựng playlist
+**2026-10-12**
+
+§10 gọi pool mỏng là rủi ro số một, và nó đã thành sự thật: mọi phần code xong
+xuôi nhưng hệ thống không chạy được vì `videos` có 0 dòng. Nút thắt không nằm ở
+kỹ thuật mà ở việc phải ngồi chọn tay 40 video.
+
+Người dùng chốt **sáu kênh** thay vì 40 video. Đó vẫn là curation — chỉ dịch lên
+một mức, từ *từng video* thành *từng kênh* — và nó gỡ được thế bí.
+
+Hiện thực: `ingest.py --kenh`. Mấu chốt là **mọi kênh YouTube đều có sẵn một
+playlist "uploads"** chứa toàn bộ video đã đăng; id của nó lấy qua
+`channels.list(forHandle=...)`. Đọc playlist đó giống hệt đọc playlist thường,
+nên **không cần thêm scope ghi YouTube** vào token — giữ nguyên hai scope đã xin.
+
+*Đã loại:* để Claude tự tạo playlist hộ. Ghi vào playlist cần scope
+`https://www.googleapis.com/auth/youtube`, tức là phải cấp quyền lại từ đầu, chỉ
+để dựng một cái hộp mà ngay sau đó `ingest.py` lại đọc ngược vào DB. Playlist chỉ
+là phương tiện vận chuyển, không phải thứ có giá trị tự thân.
+
+*Giữ lại:* chế độ playlist cũ vẫn chạy. Khi nào người dùng muốn chọn tay từng
+video thì nó vẫn ở đó.
+
+**Lưu ý chi phí:** mỗi video tốn đúng một lần gọi LLM để gắn tag, và QĐ-13 đặt
+mặc định là `claude-opus-5`. Chạy mẻ lớn thì nên đặt `ANTHROPIC_MODEL=claude-haiku-4-5`
+trong `.env` — gắn tag video là việc phân loại đơn giản. Đây chính là tình huống
+QĐ-13 đã lường trước.

@@ -1,10 +1,12 @@
-"""§3 Ingest — playlist YouTube → metadata → LLM gắn tag → bảng videos.
+"""§3 Ingest — video YouTube → metadata → LLM gắn tag → bảng videos.
 
-Chạy tay mỗi khi bạn thêm video vào playlist. Mỗi video chỉ gọi LLM **một lần**
+Hai nguồn: một playlist tự thả tay, hoặc `--kenh` kéo thẳng từ các kênh đã chọn.
+Chạy tay mỗi khi muốn bổ sung pool. Mỗi video chỉ gọi LLM **một lần**
 rồi lưu vĩnh viễn; lần chạy sau bỏ qua video đã có (trừ khi truyền --retag).
 """
 from __future__ import annotations
 
+import itertools
 import re
 import sys
 import zlib
@@ -14,6 +16,20 @@ from . import config
 from .db import ket_noi, khoi_tao
 
 CAN = ["YOUTUBE_API_KEY", "MUSMEMO_PLAYLIST_ID", "ANTHROPIC_API_KEY"]
+#: Chế độ --kenh không cần playlist nào cả.
+CAN_KENH = ["YOUTUBE_API_KEY", "ANTHROPIC_API_KEY"]
+
+#: §10 nói pool là rủi ro số một của dự án, và nó nằm ở phía người dùng chứ
+#: không phải phía code. Người dùng chốt sáu kênh này (12/10/2026) — curation
+#: diễn ra ở mức *kênh* thay vì mức *từng video*, đủ để gỡ thế bí.
+KENH_MAC_DINH = [
+    "@hanagianganhofficial",
+    "@EmiWong",
+    "@PamelaRf1",
+    "@TRAINWITHGAINSBYBRAINS",
+    "@CarolineGirvan",
+    "@yuukasagawa5483",
+]
 
 _ISO = re.compile(r"P(?:(\d+)D)?T?(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?")
 
@@ -62,6 +78,43 @@ def id_trong_playlist(playlist_id: str) -> Iterator[str]:
         trang = data.get("nextPageToken")
         if not trang:
             return
+
+
+def chuan_hoa_handle(s: str) -> str:
+    """Nhận '@Ten', 'Ten', hoặc cả link kênh — trả về '@Ten'."""
+    s = (s or "").strip().rstrip("/")
+    if "youtube.com/" in s:
+        s = s.rsplit("/", 1)[-1]
+    return s if s.startswith("@") else "@" + s
+
+
+def uploads_cua_kenh(handle: str) -> Optional[str]:
+    """@handle → id playlist 'uploads' của kênh đó.
+
+    Mọi kênh đều có sẵn một playlist chứa toàn bộ video đã đăng. Đọc nó giống
+    hệt đọc playlist thường, nên **không cần quyền ghi YouTube** — đó là lý do
+    chế độ này tồn tại thay vì bắt người dùng tự dựng playlist.
+    """
+    data = _goi_youtube("channels", part="contentDetails",
+                        forHandle=chuan_hoa_handle(handle))
+    items = data.get("items") or []
+    if not items:
+        return None
+    return items[0]["contentDetails"]["relatedPlaylists"]["uploads"]
+
+
+def id_tu_cac_kenh(handles: List[str], moi_kenh: int) -> List[str]:
+    """Video mới nhất của từng kênh, gộp lại và bỏ trùng, giữ nguyên thứ tự."""
+    ra: List[str] = []
+    for h in handles:
+        up = uploads_cua_kenh(h)
+        if not up:
+            print("[musmemo] ⚠ không tìm thấy kênh %s — bỏ qua." % h)
+            continue
+        lay = list(itertools.islice(id_trong_playlist(up), moi_kenh))
+        print("[musmemo] %-30s lấy %d video mới nhất" % (chuan_hoa_handle(h), len(lay)))
+        ra.extend(lay)
+    return list(dict.fromkeys(ra))
 
 
 def chi_tiet_video(ids: List[str]) -> List[Dict]:
@@ -155,15 +208,27 @@ ON CONFLICT(youtube_id) DO UPDATE SET
 def main(argv: Optional[List[str]] = None) -> int:
     argv = sys.argv[1:] if argv is None else argv
     retag = "--retag" in argv
-    if not config.bat_buoc(*CAN):
+    che_do_kenh = "--kenh" in argv
+    if not config.bat_buoc(*(CAN_KENH if che_do_kenh else CAN)):
         return 0
 
     con = ket_noi()
     khoi_tao(con)
     da_co = {r["youtube_id"] for r in con.execute("SELECT youtube_id FROM videos")}
 
-    ids = list(id_trong_playlist(config.lay("MUSMEMO_PLAYLIST_ID")))
-    print("[musmemo] playlist có %d video" % len(ids))
+    if che_do_kenh:
+        moi_kenh = 12
+        if "--moi" in argv:
+            try:
+                moi_kenh = int(argv[argv.index("--moi") + 1])
+            except (IndexError, ValueError):
+                pass
+        handles = [a for a in argv if a.startswith("@")] or KENH_MAC_DINH
+        ids = id_tu_cac_kenh(handles, moi_kenh)
+        print("[musmemo] tổng %d video từ %d kênh (đã bỏ trùng)" % (len(ids), len(handles)))
+    else:
+        ids = list(id_trong_playlist(config.lay("MUSMEMO_PLAYLIST_ID")))
+        print("[musmemo] playlist có %d video" % len(ids))
     can_lam = ids if retag else [v for v in ids if v not in da_co]
     if not can_lam:
         print("[musmemo] không có video mới — xong.")

@@ -129,7 +129,7 @@ Playlist YouTube → Ingest → SQLite → Scheduler → Google Calendar
 
 | Khối | Việc |
 |---|---|
-| **Ingest** | Chạy tay khi thêm video. YouTube Data API lấy metadata, Claude gắn nhóm cơ/cường độ/dụng cụ/series. Mỗi video gọi LLM **một lần** rồi lưu vĩnh viễn |
+| **Ingest** | Chạy tay. Nguồn: một playlist, hoặc `--kenh` kéo thẳng từ các kênh đã chọn (QĐ-20). YouTube Data API lấy metadata, Claude gắn nhóm cơ/cường độ/dụng cụ/series. Mỗi video gọi LLM **một lần** rồi lưu vĩnh viễn |
 | **Scheduler** | 21:00 mỗi tối. Áp §5 lên pool, chọn một bài + lối thoát, ghi `sessions` trạng thái `planned` |
 | **Publisher** | Tạo event Calendar 06:00 hôm sau, mô tả chứa link, mức tạ, lối thoát |
 | **Collector** | 12:00 hôm sau. Đọc lại event, suy ra trạng thái, ghi `sessions` + `lifts` |

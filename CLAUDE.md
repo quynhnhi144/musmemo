@@ -52,18 +52,20 @@ Không có file? Hỏi người dùng rồi dựng lại theo `PROFILE.example.m
 ✅ get_token.py    lấy Google refresh token (chạy tay một lần, cần extra [auth])
 ```
 
-47 test, chạy offline trong ~0.03s. **Chưa có secrets nào được cấu hình** nên ba
+54 test, chạy offline trong ~0.04s. **Chưa có secrets nào được cấu hình** nên ba
 workflow theo lịch hiện chỉ in "chưa cấu hình" rồi thoát 0.
 
 ## Lệnh
 
 ```bash
-./.venv/bin/python -m pytest -q                  # 47 test, không cần mạng
+./.venv/bin/python -m pytest -q                  # 54 test, không cần mạng
 ./.venv/bin/python -m musmemo.get_token          # OAuth một lần; --ghi-env để ghi thẳng .env
 ./.venv/bin/python -m musmemo.db                 # tạo/nâng cấp data/musmemo.db
 ./.venv/bin/python -m musmemo.publish --dry-run  # in event ra, không gọi mạng
 ./.venv/bin/python -m musmemo.collect --dry-run  # xem sẽ chốt buổi nào
-./.venv/bin/python -m musmemo.ingest             # cần YOUTUBE_API_KEY + ANTHROPIC_API_KEY
+./.venv/bin/python -m musmemo.ingest --kenh      # kéo từ 6 kênh đã chọn (QĐ-20)
+./.venv/bin/python -m musmemo.ingest --kenh --moi 20   # lấy nhiều hơn mỗi kênh
+./.venv/bin/python -m musmemo.ingest             # chế độ playlist, cần MUSMEMO_PLAYLIST_ID
 ./.venv/bin/python -m musmemo.ingest --retag     # gắn tag lại toàn bộ
 ```
 
@@ -170,5 +172,6 @@ Câu trả lời ghi vào `PROFILE.local.md`, không ghi vào repo.
 
 Việc kỹ thuật tiếp theo, theo thứ tự: `digest.py` → `health.py`.
 **RSVP đã chứng minh chạy được** (QĐ-16) và `collect.py` đã xong — vòng phản hồi
-của §0 khép kín. Thứ còn thiếu để hệ thống chạy thật là **playlist ~40 video**,
-rủi ro số một của cả dự án, xem §10. Sau đó mới tới việc đưa secrets lên GitHub.
+của §0 khép kín. Thứ còn thiếu để hệ thống chạy thật là **pool video**. Người dùng đã chốt sáu
+kênh (QĐ-20) nên chỉ cần `YOUTUBE_API_KEY` + `ANTHROPIC_API_KEY` rồi chạy
+`ingest --kenh`. Sau đó mới tới việc đưa secrets lên GitHub.
